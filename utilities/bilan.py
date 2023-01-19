@@ -338,7 +338,7 @@ class BilanSolde():
         else :
             message = MessageTelegram.addMessageComponent(message, f"GAIN TOTAL => +{gain} $ (+{bonus}%)\n")
         message = MessageTelegram.addMessageComponent(message, f"SOLDE TOTAL => {usdAmount}$")
-        message = MessageTelegram.addMessageComponent(message, f"N'hésitez pas à me soutenir pour le travail du bot :\n • Adresse BTC : 1CetuWt9PuppZ338MzBzQZSvtMW3NnpjMr\n • Adresse ETH (Réseau ERC20) : 0x18f71abd7c2ee05eab7292d8f34177e7a1b62236\n • Adresse SOL : AsLvBCG1fpmpaueTYBmU5JN5QKVkt9a1dLR44BAGUZbV\n• Adresse MATIC : 0x18f71abd7c2ee05eab7292d8f34177e7a1b62236\n• Adresse BNB : 0x18f71abd7c2ee05eab7292d8f34177e7a1b62236\n")
+        message = MessageTelegram.addMessageComponent(message, f"si vous voulez me soutenir pour le travail du bot :\n • Adresse BTC : 1CetuWt9PuppZ338MzBzQZSvtMW3NnpjMr\n • Adresse ETH (Réseau ERC20) : 0x18f71abd7c2ee05eab7292d8f34177e7a1b62236\n • Adresse SOL : AsLvBCG1fpmpaueTYBmU5JN5QKVkt9a1dLR44BAGUZbV\n• Adresse MATIC (Réseau Polygon) : 0x18f71abd7c2ee05eab7292d8f34177e7a1b62236\n• Adresse BNB (Réseau BSC BEP20) : 0x18f71abd7c2ee05eab7292d8f34177e7a1b62236\n")
 
         message = message.replace(' , ',' ')
         message = message.replace('-USDT','')
