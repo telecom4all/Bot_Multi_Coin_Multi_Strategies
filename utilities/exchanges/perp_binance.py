@@ -131,9 +131,22 @@ class PerpBinance():
             raise Exception(err)
 
     @authentication_required
-    def place_market_stop_loss(self, symbol, side, amount, trigger_price, reduce=False):
+    def place_market_stop_loss(self, symbol, side, amount, trigger_price, positionSide, reduce=False):
         
         try:
+            return self._session.createOrder(
+                symbol, 
+                'stop_loss', 
+                side, 
+                self.convert_amount_to_precision(symbol, amount), 
+                self.convert_price_to_precision(symbol, trigger_price),
+                params = {
+                    #'stopLossPrice': self.convert_price_to_precision(symbol, trigger_price),  # your stop price
+                    #"triggerType": "market_price",
+                    "reduceOnly": reduce
+                }
+            )
+            '''
             return self._session.createOrder(
                 symbol, 
                 'market', 
@@ -141,13 +154,15 @@ class PerpBinance():
                 self.convert_amount_to_precision(symbol, amount), 
                 self.convert_price_to_precision(symbol, trigger_price),
                 params = {
-                    'stopPrice': self.convert_price_to_precision(symbol, trigger_price),  # your stop price
+                    'stopLossPrice': self.convert_price_to_precision(symbol, trigger_price),  # your stop price
                     "triggerType": "market_price",
                     "reduceOnly": reduce
                 }
             )
+            '''
         except BaseException as err:
             raise Exception(err)
+        
 
     @authentication_required
     def get_balance_of_one_coin(self, coin):

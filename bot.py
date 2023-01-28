@@ -15,7 +15,7 @@ from utilities.custom_indicators import CustomIndocators
 from utilities.bilan import BilanSolde
 from utilities.configuration_bot import ConfigBot
 from utilities.get_infos_tokens import InfosTokens
-from utilities.populate_data_exchange import DataExchange
+from utilities.exchanges.populate_data_exchange import DataExchange
 from utilities.strats.populate_indicators import DataIndicators
 from utilities.utilities_bot import UtilitiesBot
 from utilities.take_profit import TakeProfit
@@ -42,6 +42,9 @@ if configuration['debug'] == "True":
 #choix de la class a importer suivant la strat choisi
 if configuration['strat_active'] == "BOLLINGER":
     from utilities.strats.condition_bollinger import ConditionTrade
+if configuration['strat_active'] == "RANGE_1":
+    from utilities.strats.condition_range_1 import ConditionTrade
+    
     
 if configuration['telegram_on'] == "True":
     #Début du message Télégram
@@ -64,7 +67,7 @@ if exchange_config == "BITGET":
 	)
 
 if exchange_config == "BINANCE":
-    from utilities.exchanges.perp_bitnance import PerpBinance
+    from utilities.exchanges.perp_binance import PerpBinance
     exchange = PerpBinance(
 		apiKey=configuration['apiKey_binance'],
 		secret=configuration['secret_binance']
@@ -87,9 +90,15 @@ print("USD balance :", round(usd_balance, 2), configuration['stableCoin'])
 # Collecte des Data de l'exchange
 print("Collecte des Data de l'exchange")
 if configuration['telegram_on'] == "True":
-    dfList = DataExchange.get_data_exchange(pairList, configuration, exchange, telegram_send)
+    if configuration['exchange_active'] == "BITGET":
+        dfList = DataExchange.get_data_exchange_bitget(pairList, configuration, exchange, telegram_send)
+    if configuration['exchange_active'] == "BINANCE":
+        dfList = DataExchange.get_data_exchange_binance(pairList, configuration, exchange, telegram_send)
 else:
-    dfList = DataExchange.get_data_exchange(pairList, configuration, exchange, "")
+    if configuration['exchange_active'] == "BITGET":
+        dfList = DataExchange.get_data_exchange_bitget(pairList, configuration, exchange, "")
+    if configuration['exchange_active'] == "BINANCE":
+        dfList = DataExchange.get_data_exchange_binance(pairList, configuration, exchange, "")
 
 # Collecte des indicateurs
 print("Collecte des indicateurs")
@@ -123,12 +132,21 @@ for coin in dfList:
     
     try :
         openPositions = UtilitiesBot.get_open_position(exchange, configuration)
-        pair=coin+"/"+configuration['stableCoin']+":"+configuration['stableCoin']
-        
-        position = [
+        #print(openPositions)
+        if configuration['exchange_active'] == "BITGET":
+            pair=coin+"/"+configuration['stableCoin']+":"+configuration['stableCoin']
+            position = [
                     {"side": d["side"], "size": d["contractSize"], "market_price":d["info"]["marketPrice"], "usd_size": float(d["contractSize"]) * float(d["info"]["marketPrice"]), "open_price": d["entryPrice"]}
                     for d in positions_data if d["symbol"] == pair
                     ]
+        if configuration['exchange_active'] == "BINANCE":
+            pair=coin+"/"+configuration['stableCoin']
+            position = [
+                    {"side": d["side"], "size": d["contractSize"], "market_price":d["info"]["markPrice"], "usd_size": float(d["contractSize"]) * float(d["info"]["markPrice"]), "open_price": d["entryPrice"]}
+                    for d in positions_data if d["symbol"] == pair
+                    ]
+            #print(position)
+        
         row = dfList[coin].iloc[-2]
        
         if len(position) > 0:
@@ -150,6 +168,7 @@ for coin in dfList:
                     time.sleep(int(configuration['delay_coin']))  
                     
                     exchange.place_market_order(pair, "sell", close_long_quantity, reduce=True)
+                    #exchange.place_limit_order(pair, "sell", close_long_quantity, close_long_market_price, reduce=False)
                     if configuration['telegram_on'] == "True":
                         message = MessageTelegram.addMessageComponent(message, f"Place Close Long Market Order: {close_long_quantity} {pair[:-5]} at the price of {close_long_market_price}$ ~{round(exchange_close_long_quantity, 2)}$\n")
                     openPositions -= 1

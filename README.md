@@ -13,6 +13,7 @@ git clone https://github.com/telecom4all/Bot_Multi_Coin_Multi_Strategies.git
 cd Bot_Multi_Coin_Multi_Strategies
 
 sudo apt-get update
+sudo apt-get updrade
 sudo apt install python3-pip
 sudo apt install python3.10-venv
 

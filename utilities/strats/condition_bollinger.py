@@ -25,6 +25,11 @@ class ConditionTrade():
                             print("False")
                             print("------------------------------------------- ")
                         return False
+                else:
+                    if configuration['debug_detail'] == "True":
+                        print("False")
+                        print("------------------------------------------- ")
+                    return False
             else:
                 if configuration['debug_detail'] == "True":
                     print("False")
@@ -85,11 +90,7 @@ class ConditionTrade():
                     print("------------------------------------------- ")
                 return False
                     
-        else:
-            if configuration['debug_detail'] == "True":
-                print("False")
-                print("------------------------------------------- ")
-            return False
+        
 
     def close_short(row, configuration):
         if configuration['debug_detail'] == "True":

@@ -97,7 +97,7 @@ class ConfigBot():
             'notifBilanEvolutionContinue': notifBilanEvolutionContinue
         })
 
-        # Récupération des parametre de stratégie
+        # Récupération des parametre de stratégie Bollinger
         if strat_active == "BOLLINGER":
             name_strat = str(config['STRAT.BOLLINGER']['name_strat'])
             bol_window = str(config['STRAT.BOLLINGER']['bol_window'])
@@ -115,7 +115,31 @@ class ConfigBot():
                 'name_strat' : name_strat
             })
 
+        # Récupération des parametre de stratégie Range_1
+        if strat_active == "RANGE_1":
+            name_strat = str(config['STRAT.RANGE_1']['name_strat'])
+            bol_window = str(config['STRAT.RANGE_1']['bol_window'])
+            bol_std = str(config['STRAT.RANGE_1']['bol_std'])
+            min_bol_spread = str(config['STRAT.RANGE_1']['min_bol_spread'])
+            kama_windows = str(config['STRAT.RANGE_1']['kama_windows'])
+            kama_pow1 = str(config['STRAT.RANGE_1']['kama_pow1'])
+            kama_pow2 = str(config['STRAT.RANGE_1']['kama_pow2'])
+            rsi_windows = str(config['STRAT.RANGE_1']['rsi_windows'])
+            
 
+            # Mise à jour de la variable de retour
+            config_data.update({
+                'bol_window': bol_window,
+                'bol_std': bol_std,
+                'min_bol_spread': min_bol_spread,
+                'kama_windows': kama_windows,
+                'kama_pow1': kama_pow1,
+                'kama_pow2': kama_pow2,
+                'rsi_windows': rsi_windows,
+                'name_strat' : name_strat
+            })
+            
+            
         # Récupération des informations d'authentification de bitget
         apiKey_bitget = str(config['BITGET.AUTHENTIFICATION']['apiKey'])
         secret_bitget = str(config['BITGET.AUTHENTIFICATION']['secret'])

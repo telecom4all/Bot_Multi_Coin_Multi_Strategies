@@ -1,5 +1,5 @@
 pandas
-ccxt
+ccxt==2.5.47
 constantly
 numpy
 ta
